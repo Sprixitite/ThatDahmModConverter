@@ -15,7 +15,12 @@ pub fn get_code(context: &Lua) -> Chunk<'_, '_> {
             }
             if details ~= nil then
                 for i, v in next, details do
-                    newModule[i] = v
+                    if i == "hooks" then
+                    elseif i == "description" then
+                        newModule.description = v.english or type(v) == "string" and v or "Couldn't convert description"
+                    else
+                        newModule[i] = v
+                    end
                 end
             end
             setmetatable(newModule, dorhudModuleCompat)
@@ -39,6 +44,8 @@ pub fn get_code(context: &Lua) -> Chunk<'_, '_> {
                 { hook_id = hooking, script_path = ensureLuaExtension(hook) }
             )
         end
+
+        dorhudModuleCompat.register_post_override = dorhudModuleCompat.hook_post_require
 
         _G.DMod = _G.NoOpTable.new()
 

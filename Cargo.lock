@@ -447,7 +447,6 @@ dependencies = [
  "dialoguer",
  "lazy_static",
  "mlua",
- "serde",
  "serde_json",
 ]
 

@@ -6,7 +6,7 @@ use dialoguer::{Confirm, MultiSelect};
 use crate::{app, messages};
 
 fn get_yesno<'a>() -> Confirm<'a> {
-    Confirm::new()
+    Confirm::new().report(false)
 }
 
 fn get_multi<'a>() -> MultiSelect<'a> {
@@ -34,6 +34,8 @@ fn find_local_basemod() -> Option<PathBuf> {
 fn get_subdir_mods(cwd: &Path) -> HashMap<String, PathBuf> {
 
     let mut found = HashMap::new();
+    let yesno = get_yesno();
+    yesno.with_prompt(messages::getmsg("legacy_has_modtxt").msg());
 
     // Get iterator here so we can handle errors with fancy colours :)
     let dir_iterator = match cwd.read_dir() {
@@ -48,19 +50,24 @@ fn get_subdir_mods(cwd: &Path) -> HashMap<String, PathBuf> {
             continue;
         }
 
-        let mut entry_path = entry_result.unwrap().path();
+        let entry_path = entry_result.unwrap().path();
 
         if !entry_path.is_dir() {
             continue;
         }
 
-        entry_path.push("base.lua");
+        let mut basemod_path = entry_path.clone();
+        let mut modtxt_path = entry_path.clone();
+        basemod_path.push("base.lua");
+        modtxt_path.push("mod.txt");
 
-        if entry_path.exists() {
-            // Do this so the prompt is themed
-            // Yes this is stupid looking
-            found.insert(entry_path.to_str().unwrap().italic().to_string(), entry_path);
+        if !basemod_path.exists() {
+            continue;
         }
+
+        // Do this so the prompt is themed
+        // Yes this is stupid
+        found.insert(basemod_path.to_str().unwrap().italic().to_string(), basemod_path);
 
     }
 

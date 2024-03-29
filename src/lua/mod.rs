@@ -1,9 +1,8 @@
+use std::fs::{self};
 use std::path::Path;
 
 use mlua::prelude::*;
-use mlua::{Lua, LuaSerdeExt};
-
-use serde::Serialize;
+use mlua::Lua;
 
 use crate::app;
 use crate::messages;
@@ -22,10 +21,16 @@ pub fn create_mod_txts(context: &Lua, basemod_paths: &[&Path]) {
             Err(e) => app::error("exec_basemod_failure", Some(&e))
         };
 
-        match serde_json::to_string_pretty(&mod_tbl).map_err(mlua::Error::external) {
-            Ok(s) => println!("{}", s),
+        let json = match serde_json::to_string_pretty(&mod_tbl).map_err(mlua::Error::external) {
+            Ok(s) => s,
             Err(e) => app::error("serde_serialization_failure", Some(&e))
-        }
+        };
+
+        let mut mod_txt_path = (*path).clone().to_owned();
+        mod_txt_path.pop();
+        mod_txt_path.push("mod.txt");
+
+        _ = fs::write(mod_txt_path, json);
 
     }
 

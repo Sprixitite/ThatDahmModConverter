@@ -21,6 +21,12 @@ fn find_wanted_mods() -> Vec<PathBuf> {
 
 fn main() {
 
+    // I am sorry if this is bad rust code, I don't write a lot of rust
+    // This was originally gonna be written in C#, but I couldn't find an
+    // Up-to-date Lua5.1 binding to C# (only 5.4)
+    // I did write a quick prototype in C++ but I have no faith in that version
+    // At this rate might as well learn Go
+
     aloha();
     
     // Init the lazy static PROGRAM_SETTINGS

@@ -232,6 +232,16 @@ lazy_static!{
             ),
             (
                 MessageType::INFO,
+                "legacy_has_modtxt",
+                strings!(
+                    di(red( "Found legacy mod" )),
+                     i(red( "\"{}\"" )),
+                    di(red( "which already has an associated \"mod.txt\"!" )),
+                     i(red( "Would you like to ignore this mod?" ))
+                )
+            ),
+            (
+                MessageType::INFO,
                 "legacy_basemod_nearby",
                 strings!(
                     di( "Legacy base.lua file found in current folder!" ),
